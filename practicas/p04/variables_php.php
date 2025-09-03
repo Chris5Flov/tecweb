@@ -82,7 +82,7 @@
             unset($a, $b, $c, $z);
        ?>
        <?php
-    	    echo "<h2>Inciso 4: Mostrar contenido de variables después de la asignación con \$GLOBALS</h2>";
+    	    echo "<h2>Inciso 4. Mostrar contenido de variables después de la asignación con \$GLOBALS</h2>";
 
     	    $GLOBALS['a'] = "PHP5";
 	    echo "Variable \$a: " . $GLOBALS['a'] . "<br>";
@@ -111,7 +111,18 @@
 	    echo "</pre>";
 
 	    unset($GLOBALS['a'], $GLOBALS['b'], $GLOBALS['c'], $GLOBALS['z']);
-	?>
+     ?>
+     <?php
+	    echo "<h2>Inciso 5. Dar valor a variables \$a, \$b, \$c</h2>";
 
+	    $a = "7 personas";
+	    $b = (int) $a;
+	    $a = "9e3";
+	    $c = (float) $a;
+
+	    echo "Variable \$a: $a <br>";
+	    echo "Variable \$b: $b <br>";
+	    echo "Variable \$c: $c <br>";
+     ?>
     </body>
 </html>
