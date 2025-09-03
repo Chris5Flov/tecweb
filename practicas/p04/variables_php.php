@@ -51,7 +51,7 @@
         ?>
 
 	<?php
-    	    echo "<h2>Inciso 3. Mostrar contenido de variables después de la asignación</h2>";
+    	    echo "<h2>Inciso 3. Mostrar contenido de variables después de la asignación.</h2>";
 	    $a = "PHP5";
     	    echo "Variable \$a: $a <br>";
 
