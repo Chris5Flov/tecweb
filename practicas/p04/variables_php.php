@@ -81,5 +81,25 @@
 
             unset($a, $b, $c, $z);
        ?>
+        <?php
+	    echo"<h2>Inciso 4: Mostrar contenido de varibles despues de la asignación con $GLOBALS</h2>"
+            $a = "PHP5";
+            echo "Variable \$a:" . $GLOBALS['a'] . "<br>";
+            $z[] = &$a;
+            print_r($GLOBALS['z']);
+            echo "<br>";
+            $b = "5a version de PHP";
+            echo "Variable \$b:" . $GLOBALS['b'] . "<br>";
+            @$c = $b*10;
+            echo "Variable \$c:" . $GLOBALS['c'] . "<br>";
+            $a .= $b;
+            echo "Variable \$a:" . $GLOBALS['a'] . "<br>";
+            @$b *= $c;
+            echo "Variable \$b:" . $GLOBALS['b'] . "<br>";
+            $z[0] = "MySQL";
+            print_r($GLOBALS['z']);
+
+            unset($a, $b, $c, $z)
+        ?>
     </body>
 </html>
