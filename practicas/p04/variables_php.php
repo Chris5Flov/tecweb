@@ -125,7 +125,7 @@
 	        echo "Variable \$c: $c <br>";
     ?>
     <?php
-            echo "<h2>Inciso 6. Compronar valor booleano variables</h2>"
+            echo "<h2>Inciso 6. Compronar valor booleano variables</h2>";
             $a = "0";
             $b = "TRUE";
             $c = FALSE;
