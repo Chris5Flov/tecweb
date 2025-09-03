@@ -12,7 +12,7 @@
         <h2>Manejo de variables en php  </h2>
 
         <?php
-            echo "<h2>Ejercicio 1</h2>";
+            echo "<h2>Inciso 1. Variables validas</h2>";
             echo '$_myvar: es valida, porque comienza con un guion bajo, sigue la nomenclatura de php';
             echo "<br>";
             echo '$_7var: es valida, porque comienza con un guion bajo, sigue la nomenclatura de php';
@@ -28,7 +28,7 @@
             echo '$house*5: no es valida, porque tiene un signo *, no sigue la nomenclatura de php';
         ?>
 	<?php
-       	    echo "<h2>Inciso 2</h2>";
+       	    echo "<h2>Inciso 2. Dar valores</h2>";
             echo "<h3>a)</h3>";
             $a = "ManejadorSQL";
             $b = 'MySQL';
@@ -49,5 +49,37 @@
             echo "<h3>d)</h3>";
             echo "La variable \$a cambia su valor a 'PHP server' y como las variables \$b y \$c son referencias de \$a, toman el mismo valor";
         ?>
+
+	<?php
+    	    echo "<h2>Inciso 3. Mostrar contenido de variables después de la asignación</h2>";
+	    $a = "PHP5";
+    	    echo "Variable \$a: $a <br>";
+
+    	    $z[] = &$a;
+    	    echo "Arreglo \$z después de agregar \$a:<br>";
+    	    echo "<pre>";
+    	    print_r($z);
+    	    echo "</pre>";
+
+            $b = "5a version de PHP";
+            echo "Variable \$b: $b <br>";
+
+            @$c = $b * 10; 
+            echo "Variable \$c: $c <br>";
+
+    	    $a .= $b; 
+            echo "Variable \$a después de concatenar \$b: $a <br>";
+
+            @$b *= $c; 
+            echo "Variable \$b después de multiplicar por \$c: $b <br>";
+
+            $z[0] = "MySQL";
+            echo "Arreglo \$z después de cambiar \$z[0]:<br>";
+            echo "<pre>";
+            print_r($z);
+            echo "</pre>";
+
+            unset($a, $b, $c, $z);
+       ?>
     </body>
 </html>
