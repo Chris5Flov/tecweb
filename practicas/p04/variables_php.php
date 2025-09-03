@@ -154,7 +154,7 @@
     ?>
 
     <?php
-            echo "<h2>Inciso 7: Uso de variable $_SERVER</h2>";
+            echo " <h2>Inciso 7: Uso de variable \$_SERVER</h2>";
             echo "Versión de apache: " . $_SERVER['SERVER_SOFTWARE'];
             echo "<br>";
             echo "Versión de php: " . phpversion();
