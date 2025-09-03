@@ -80,49 +80,77 @@
             echo "</pre>";
 
             unset($a, $b, $c, $z);
-       ?>
-       <?php
+    ?>
+    <?php
     	    echo "<h2>Inciso 4. Mostrar contenido de variables después de la asignación con \$GLOBALS</h2>";
 
     	    $GLOBALS['a'] = "PHP5";
-	    echo "Variable \$a: " . $GLOBALS['a'] . "<br>";
-	    $GLOBALS['z'][] = &$GLOBALS['a'];
-	    echo "Arreglo \$z:<br>";
-	    echo "<pre>";
-	    print_r($GLOBALS['z']);
-	    echo "</pre>";
+	        echo "Variable \$a: " . $GLOBALS['a'] . "<br>";
+	        $GLOBALS['z'][] = &$GLOBALS['a'];
+	        echo "Arreglo \$z:<br>";
+	        echo "<pre>";
+	        print_r($GLOBALS['z']);
+	        echo "</pre>";
 
-	    $GLOBALS['b'] = "5a version de PHP";
-	    echo "Variable \$b: " . $GLOBALS['b'] . "<br>";
+	        $GLOBALS['b'] = "5a version de PHP";
+	        echo "Variable \$b: " . $GLOBALS['b'] . "<br>";
 
-	    @$GLOBALS['c'] = $GLOBALS['b'] * 10;
-	    echo "Variable \$c: " . $GLOBALS['c'] . "<br>";
+	        @$GLOBALS['c'] = $GLOBALS['b'] * 10;
+	        echo "Variable \$c: " . $GLOBALS['c'] . "<br>";
 
-	    $GLOBALS['a'] .= $GLOBALS['b'];
-	    echo "Variable \$a después de concatenar \$b: " . $GLOBALS['a'] . "<br>";
+	        $GLOBALS['a'] .= $GLOBALS['b'];
+	        echo "Variable \$a después de concatenar \$b: " . $GLOBALS['a'] . "<br>";
 
-	    @$GLOBALS['b'] *= $GLOBALS['c'];
-	    echo "Variable \$b después de multiplicar por \$c: " . $GLOBALS['b'] . "<br>";
+	        @$GLOBALS['b'] *= $GLOBALS['c'];
+	        echo "Variable \$b después de multiplicar por \$c: " . $GLOBALS['b'] . "<br>";
 
-	    $GLOBALS['z'][0] = "MySQL";
-	    echo "Arreglo \$z después de cambiar \$z[0]:<br>";
-	    echo "<pre>";
-	    print_r($GLOBALS['z']);
-	    echo "</pre>";
+	        $GLOBALS['z'][0] = "MySQL";
+	        echo "Arreglo \$z después de cambiar \$z[0]:<br>";
+	        echo "<pre>";
+	        print_r($GLOBALS['z']);
+	        echo "</pre>";
 
-	    unset($GLOBALS['a'], $GLOBALS['b'], $GLOBALS['c'], $GLOBALS['z']);
-     ?>
-     <?php
-	    echo "<h2>Inciso 5. Dar valor a variables \$a, \$b, \$c</h2>";
+	        unset($GLOBALS['a'], $GLOBALS['b'], $GLOBALS['c'], $GLOBALS['z']);
+    ?>
+    <?php
+	        echo "<h2>Inciso 5. Dar valor a variables \$a, \$b, \$c</h2>";
 
-	    $a = "7 personas";
-	    $b = (int) $a;
-	    $a = "9e3";
-	    $c = (float) $a;
+	        $a = "7 personas";
+	        $b = (int) $a;
+	        $a = "9e3";
+	        $c = (float) $a;
 
-	    echo "Variable \$a: $a <br>";
-	    echo "Variable \$b: $b <br>";
-	    echo "Variable \$c: $c <br>";
-     ?>
+	        echo "Variable \$a: $a <br>";
+	        echo "Variable \$b: $b <br>";
+	        echo "Variable \$c: $c <br>";
+    ?>
+    <?php
+            echo "<h2>Inciso 6. Compronar valor booleano variables</h2>"
+            $a = "0";
+            $b = "TRUE";
+            $c = FALSE;
+            $d = ($a OR $b);
+            $e = ($a AND $c);
+            $f = ($a XOR $b);
+
+            echo "Variable \$a: ", var_dump($a);
+            echo "<br>";
+            echo "Variable \$b: ", var_dump($b);
+            echo "<br>";
+            echo "Variable \$c: ", var_dump($c);
+            echo "<br>";
+            echo "Variable \$d: ", var_dump($d);
+            echo "<br>";
+            echo "Variable \$e: ", var_dump($e);
+            echo "<br>";
+            echo "Variable \$f: ", var_dump($f);
+    ?>
+
+    <h3>Transformación de valor booleano de la variable $c y $e</h3>
+    <?php
+            echo "Variable \$c: " . (int)$c;
+            echo "<br>";
+            echo "Variable \$e: " . (int)$e;
+    ?>
     </body>
 </html>
