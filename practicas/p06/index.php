@@ -102,6 +102,260 @@
     }
     ?>
 
+    <h2>Ejercicio 4</h2>
+    <p>Arreglo de letras con ASCII</p>
+
+    <?php
+    function arregloAscii() {
+        $b = [];
+        for ($i = 97; $i <= 122; $i++) {
+            $b[$i] = chr($i); 
+        }
+        return $b;
+    }
+
+    $arreglo = arregloAscii();
+
+    echo "<table border='1' cellpadding='5' cellspacing='0'>";
+    echo "<tr><th>Índice</th><th>Letra</th></tr>";
+
+    foreach ($arreglo as $key => $value) {
+        echo "<tr><td>$key</td><td>$value</td></tr>";
+    }
+
+    echo "</table>";
+    ?>
+
+    <h2>Ejercicio 5</h2>
+    <p>Identificar sexo y edad</p>
+
+    <form action="" method="post">
+        Edad: <input type="text" name="edad" required><br>
+        Sexo: <input type="text" name="sexo" required><br>
+        <input type="submit" value="Verificar">
+    </form>
+
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        $edad = $_POST['edad'];
+        $sexo = strtolower(trim($_POST['sexo'])); // normaliza el texto
+
+        if ($sexo === 'femenino' && $edad >= 18 && $edad <= 35) {
+            echo "<p><strong>Bienvenida, usted está en el rango de edad permitido.</strong></p>";
+        } else {
+            echo "<p><strong>No cumple con los requisitos de edad y/o sexo.</strong></p>";
+        }
+    }
+    ?>
+
+    <h2>Ejercicio 6</h2>
+    <p>Parque vehicular de una ciudad</p>
+
+    <?php
+    $parqueVehicular = [
+        "ABC1234" => [
+            "Auto" => [
+                "marca" => "HONDA",
+                "modelo" => 2020,
+                "tipo" => "camioneta"
+            ],
+            "Propietario" => [
+                "nombre" => "Alfonso Esparza",
+                "ciudad" => "Puebla, Pue.",
+                "direccion" => "C.U., Jardines de San Manuel"
+            ]
+        ],
+        "XYZ5678" => [
+            "Auto" => [
+                "marca" => "MAZDA",
+                "modelo" => 2019,
+                "tipo" => "sedan"
+            ],
+            "Propietario" => [
+                "nombre" => "María Molina",
+                "ciudad" => "Puebla, Pue.",
+                "direccion" => "97 Oriente"
+            ]
+        ],
+        "JKL8901" => [
+            "Auto" => [
+                "marca" => "TOYOTA",
+                "modelo" => 2021,
+                "tipo" => "hatchback"
+            ],
+            "Propietario" => [
+                "nombre" => "Carlos Ramírez",
+                "ciudad" => "CDMX",
+                "direccion" => "Av. Reforma 100"
+            ]
+        ],
+        "QWE4321" => [
+            "Auto" => [
+                "marca" => "NISSAN",
+                "modelo" => 2018,
+                "tipo" => "sedan"
+            ],
+            "Propietario" => [
+                "nombre" => "Laura Sánchez",
+                "ciudad" => "Guadalajara, Jal.",
+                "direccion" => "Col. Americana 23"
+            ]
+        ],
+        "LMN6543" => [
+            "Auto" => [
+                "marca" => "FORD",
+                "modelo" => 2022,
+                "tipo" => "camioneta"
+            ],
+            "Propietario" => [
+                "nombre" => "Ricardo López",
+                "ciudad" => "Monterrey, NL",
+                "direccion" => "San Pedro Garza García"
+            ]
+        ],
+        "RTY8765" => [
+            "Auto" => [
+                "marca" => "KIA",
+                "modelo" => 2021,
+                "tipo" => "hatchback"
+            ],
+            "Propietario" => [
+                "nombre" => "Ana Torres",
+                "ciudad" => "Querétaro, Qro.",
+                "direccion" => "Av. Universidad 500"
+            ]
+        ],
+        "FGH1357" => [
+            "Auto" => [
+                "marca" => "CHEVROLET",
+                "modelo" => 2017,
+                "tipo" => "sedan"
+            ],
+            "Propietario" => [
+                "nombre" => "Jorge Fernández",
+                "ciudad" => "Toluca, Edo. Méx.",
+                "direccion" => "Col. Centro 12"
+            ]
+        ],
+        "UIO2468" => [
+            "Auto" => [
+                "marca" => "VOLKSWAGEN",
+                "modelo" => 2019,
+                "tipo" => "camioneta"
+            ],
+            "Propietario" => [
+                "nombre" => "Patricia Méndez",
+                "ciudad" => "León, Gto.",
+                "direccion" => "Blvd. Aeropuerto 300"
+            ]
+        ],
+        "BNM9753" => [
+            "Auto" => [
+                "marca" => "HYUNDAI",
+                "modelo" => 2020,
+                "tipo" => "sedan"
+            ],
+            "Propietario" => [
+                "nombre" => "Luis Gómez",
+                "ciudad" => "Mérida, Yuc.",
+                "direccion" => "Centro Histórico 45"
+            ]
+        ],
+        "POI8642" => [
+            "Auto" => [
+                "marca" => "MITSUBISHI",
+                "modelo" => 2016,
+                "tipo" => "hatchback"
+            ],
+            "Propietario" => [
+                "nombre" => "Fernanda Ruiz",
+                "ciudad" => "Cancún, Q. Roo",
+                "direccion" => "Zona Hotelera 200"
+            ]
+        ],
+        "VBN3579" => [
+            "Auto" => [
+                "marca" => "TESLA",
+                "modelo" => 2023,
+                "tipo" => "sedan"
+            ],
+            "Propietario" => [
+                "nombre" => "Diego Martínez",
+                "ciudad" => "CDMX",
+                "direccion" => "Polanco 110"
+            ]
+        ],
+        "ASD7412" => [
+            "Auto" => [
+                "marca" => "BMW",
+                "modelo" => 2021,
+                "tipo" => "camioneta"
+            ],
+            "Propietario" => [
+                "nombre" => "Gabriela Ortiz",
+                "ciudad" => "Tijuana, BC",
+                "direccion" => "Zona Río 34"
+            ]
+        ],
+        "GHJ8523" => [
+            "Auto" => [
+                "marca" => "MERCEDES",
+                "modelo" => 2019,
+                "tipo" => "sedan"
+            ],
+            "Propietario" => [
+                "nombre" => "Héctor Hernández",
+                "ciudad" => "Saltillo, Coah.",
+                "direccion" => "Col. Roma 10"
+            ]
+        ],
+        "KLM9634" => [
+            "Auto" => [
+                "marca" => "AUDI",
+                "modelo" => 2020,
+                "tipo" => "hatchback"
+            ],
+            "Propietario" => [
+                "nombre" => "Marisol Vargas",
+                "ciudad" => "Pachuca, Hgo.",
+                "direccion" => "Zona Centro 99"
+            ]
+        ],
+        "ZXC1597" => [
+            "Auto" => [
+                "marca" => "PEUGEOT",
+                "modelo" => 2018,
+                "tipo" => "sedan"
+            ],
+            "Propietario" => [
+                "nombre" => "Rodrigo Silva",
+                "ciudad" => "Oaxaca, Oax.",
+                "direccion" => "Av. Juárez 123"
+            ]
+        ]
+    ];
+
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['matricula'])) {
+        $matricula = strtoupper(trim($_POST['matricula']));
+
+        echo "<pre>";
+        if ($matricula === "TODOS") {
+            print_r($parqueVehicular);
+        } elseif (array_key_exists($matricula, $parqueVehicular)) {
+            print_r($parqueVehicular[$matricula]);
+        } else {
+            echo "No se encontró el vehículo con matrícula: $matricula";
+        }
+        echo "</pre>";
+    }
+    ?>
+
+    <form action="" method="post">
+        <label for="matricula">Ingresa matrícula (o todos los autos registrados): </label>
+        <input type="text" id="matricula" name="matricula" required>
+        <input type="submit" value="Consultar">
+    </form>
+
 </body>
 </html>
 
