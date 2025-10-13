@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Registro de productos</title>
+    <style type="text/css">
+        ol, ul { 
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registro de productos</h1>
+    <form id="formularioSuplementos" action="http://localhost/tecweb/practicas/p08/set_producto_v2.php" method="post" onsubmit="return validarFormulario()">
+        <fieldset>
+            <legend>Agrega el producto</legend>
+            <ul>
+                <li><label for="form-name">Nombre: </label> <input type="text" name="name" id="form-name"></li>
+                <li>
+                    <label for="form-marca">Marca: </label>
+                    <select name="marca" id="form-marca" required>
+                        <option value="">Seleccione una marca</option>
+                        <option value="Nike">Nike</option>
+                        <option value="Adidas">Adidas</option>
+                        <option value="Puma">Puma</option>
+                        <option value="Under">Under</option>
+                    </select>
+                </li>
+                <li><label for="form-modelo">Modelo: </label> <input type="text" name="modelo" id="form-modelo"></li>
+                <li><label for="form-precio">Precio: </label> <input type="number" name="precio" id="form-precio" step="0.01"></li>
+                <li><label for="form-story">Ingresa los detalles del producto: </label><br><textarea name="story" rows="4" cols="60" id="form-story"></textarea></li>
+                <li><label for="form-cantidad">Unidades: </label> <input type="number" name="cantidad" id="form-cantidad"></li>
+                <li><label for="form-imagen">Imagen:</label> <input type="text" name="imagen" id="form-imagen" placeholder="img/nombre-imagen.png"></li>
+            </ul>
+        </fieldset>               
+        <p>
+            <input type="submit" value="Agregar productos">
+            <input type="reset">
+        </p>
+    </form>
+    <script>
+        function validarFormulario() {
+            var nombre = document.getElementById('form-name').value.trim();
+            var marca = document.getElementById('form-marca').value;
+            var modelo = document.getElementById('form-modelo').value.trim();
+            var precio = document.getElementById('form-precio').value;
+            var cantidad = document.getElementById('form-cantidad').value;
+            var imagenInput = document.getElementById('form-imagen');
+
+            if (nombre === "" || nombre.length > 100) {
+                alert("Debes ingresar el nombre y que tenga hasta 100 caracteres");
+                return false;
+            }
+
+            if (marca === "") {
+                alert("Selecciona una marca");
+                return false;
+            }
+
+            if (!/^[a-zA-Z0-9 ]{1,25}$/.test(modelo)) {
+                alert("El modelo no puede pasar de 25 caracteres");
+                return false;
+            }
+
+            if (precio === "" || parseFloat(precio) < 99.99) {
+                alert("Es necesario el precio y que sea mayor a 99.99");
+                return false;
+            }
+
+            if (cantidad === "" || parseInt(cantidad) < 1) {
+                alert("Debe haber al manos 1 unidad");
+                return false;
+            }
+
+            if (imagenInput.value.trim() === '') {
+                imagenInput.value = 'img/default.png';
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>
