@@ -3,7 +3,8 @@
         'localhost',
         'root',
         '12345678a',
-        'marketzone'
+        'marketzone',
+        3399
     );
 
     /**
