@@ -1,11 +1,5 @@
 <?php
-    /*namespace Nat\Delete;
-    use Vendor\Composer\Products as Products;
-    require_once __DIR__.'/../../Products.php';
 
-    $productos = new Products('marketzone');
-    $productos->delete( $_POST['id'] );
-    echo $productos->getData();*/
 namespace Nat\Delete;
 use Vendor\Composer\Products as Products;
 require_once __DIR__.'/../../Products.php';
