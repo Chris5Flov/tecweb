@@ -1,18 +1,45 @@
 <?php
-header('Content-Type: application/json');
-$conexion = new mysqli('localhost','root','','marketzone');
-if($conexion->connect_error){
-    die(json_encode(['status'=>'error','message'=>'No se pudo conectar a la DB']));
-}
-$conexion->set_charset("utf8");
+    /*include_once __DIR__.'/database.php';
 
-if(isset($_POST['id'])){
-    $id = intval($_POST['id']);
-    if($conexion->query("UPDATE productos SET eliminado=1 WHERE id=$id")){
-        echo json_encode(['status'=>1]);
-    } else {
-        echo json_encode(['status'=>0]);
-    }
+    // SE CREA EL ARREGLO QUE SE VA A DEVOLVER EN FORMA DE JSON
+    $data = array(
+        'status'  => 'error',
+        'message' => 'La consulta falló'
+    );
+    // SE VERIFICA HABER RECIBIDO EL ID
+    if( isset($_POST['id']) ) {
+        $id = $_POST['id'];
+        // SE REALIZA LA QUERY DE BÚSQUEDA Y AL MISMO TIEMPO SE VALIDA SI HUBO RESULTADOS
+        $sql = "UPDATE productos SET eliminado=1 WHERE id = {$id}";
+        if ( $conexion->query($sql) ) {
+            $data['status'] =  "success";
+            $data['message'] =  "Producto eliminado";
+		} else {
+            $data['message'] = "ERROR: No se ejecuto $sql. " . mysqli_error($conexion);
+        }
+		$conexion->close();
+    } 
+    
+    // SE HACE LA CONVERSIÓN DE ARRAY A JSON
+    echo json_encode($data, JSON_PRETTY_PRINT)*/
+namespace backend;
+
+require_once __DIR__ . "/myapi/Products.php";
+use myapi\Products;
+
+// Crear instancia
+$products = new Products("marketzone", "root", "12345678a", 3399);
+
+// Verificar si enviaron el ID
+if (isset($_POST['id'])) {
+    $id = $_POST['id'];
+
+    // Ejecutar el método delete()
+    $products->delete($id);
 }
-$conexion->close();
+
+// Enviar respuesta en JSON
+echo $products->getData();
+
+
 ?>

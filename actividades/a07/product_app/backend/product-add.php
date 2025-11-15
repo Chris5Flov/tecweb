@@ -1,34 +1,55 @@
 <?php
-header('Content-Type: application/json');
-$conexion = new mysqli('localhost','root','','marketzone');
-if($conexion->connect_error){
-    die(json_encode(['status'=>'error','message'=>'No se pudo conectar a la DB']));
-}
-$conexion->set_charset("utf8");
+    /*include_once __DIR__.'/database.php';
 
-if(isset($_POST['nombre'])){
-    $nombre = $conexion->real_escape_string($_POST['nombre']);
-    $marca = $conexion->real_escape_string($_POST['marca']);
-    $modelo = $conexion->real_escape_string($_POST['modelo']);
-    $precio = floatval($_POST['precio']);
-    $detalles = $conexion->real_escape_string($_POST['detalles']);
-    $unidades = intval($_POST['unidades']);
-    $imagen = $conexion->real_escape_string($_POST['imagen']);
-
-    // Verificar si existe
-    $result = $conexion->query("SELECT * FROM productos WHERE nombre='$nombre' AND eliminado=0");
-
-    if($result->num_rows == 0){
-        $sql = "INSERT INTO productos VALUES (null,'$nombre','$marca','$modelo',$precio,'$detalles',$unidades,'$imagen',0)";
-        if($conexion->query($sql)){
-            echo json_encode(['status'=>'success','message'=>'Producto agregado']);
-        } else {
-            echo json_encode(['status'=>'error','message'=>$conexion->error]);
+    // SE OBTIENE LA INFORMACIÓN DEL PRODUCTO ENVIADA POR EL CLIENTE
+    $data = array(
+        'status'  => 'error',
+        'message' => 'Ya existe un producto con ese nombre'
+    );
+    if(isset($_POST['nombre'])) {
+        // SE TRANSFORMA EL POST A UN STRING EN JSON, Y LUEGO A OBJETO
+        $jsonOBJ = json_decode( json_encode($_POST) );
+        // SE ASUME QUE LOS DATOS YA FUERON VALIDADOS ANTES DE ENVIARSE
+        $sql = "SELECT * FROM productos WHERE nombre = '{$jsonOBJ->nombre}' AND eliminado = 0";
+	    $result = $conexion->query($sql);
+        
+        if ($result->num_rows == 0) {
+            $conexion->set_charset("utf8");
+            $sql = "INSERT INTO productos VALUES (null, '{$jsonOBJ->nombre}', '{$jsonOBJ->marca}', '{$jsonOBJ->modelo}', {$jsonOBJ->precio}, '{$jsonOBJ->detalles}', {$jsonOBJ->unidades}, '{$jsonOBJ->imagen}', 0)";
+            if($conexion->query($sql)){
+                $data['status'] =  "success";
+                $data['message'] =  "Producto agregado";
+            } else {
+                $data['message'] = "ERROR: No se ejecuto $sql. " . mysqli_error($conexion);
+            }
         }
-    } else {
-        echo json_encode(['status'=>'error','message'=>'Ya existe un producto con ese nombre']);
+
+        $result->free();
+        // Cierra la conexion
+        $conexion->close();
     }
-    $result->free();
+
+    // SE HACE LA CONVERSIÓN DE ARRAY A JSON
+    echo json_encode($data, JSON_PRETTY_PRINT);*/
+
+namespace backend;
+
+require_once __DIR__ . "/myapi/Products.php";
+use myapi\Products;
+
+// Crear instancia
+$products = new Products("marketzone", "root", "12345678a", 3399);
+
+// Verificar si enviaron datos
+if (isset($_POST['nombre'])) {
+    // Convertir POST a objeto
+    $jsonOBJ = json_decode(json_encode($_POST));
+
+    // Ejecutar el método add()
+    $products->add($jsonOBJ);
 }
-$conexion->close();
+
+// Enviar respuesta en JSON
+echo $products->getData();
+
 ?>

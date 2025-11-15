@@ -1,20 +1,44 @@
 <?php
-header('Content-Type: application/json');
-$conexion = new mysqli('localhost','root','','marketzone');
-if($conexion->connect_error){
-    die(json_encode(['status'=>'error','message'=>'No se pudo conectar a la DB']));
+    /*include_once __DIR__.'/database.php';
+
+    // SE CREA EL ARREGLO QUE SE VA A DEVOLVER EN FORMA DE JSON
+    $data = array();
+    // SE VERIFICA HABER RECIBIDO EL ID
+    if( isset($_GET['search']) ) {
+        $search = $_GET['search'];
+        // SE REALIZA LA QUERY DE BÚSQUEDA Y AL MISMO TIEMPO SE VALIDA SI HUBO RESULTADOS
+        $sql = "SELECT * FROM productos WHERE (id = '{$search}' OR nombre LIKE '%{$search}%' OR marca LIKE '%{$search}%' OR detalles LIKE '%{$search}%') AND eliminado = 0";
+        if ( $result = $conexion->query($sql) ) {
+            // SE OBTIENEN LOS RESULTADOS
+			$rows = $result->fetch_all(MYSQLI_ASSOC);
+
+            if(!is_null($rows)) {
+                // SE CODIFICAN A UTF-8 LOS DATOS Y SE MAPEAN AL ARREGLO DE RESPUESTA
+                foreach($rows as $num => $row) {
+                    foreach($row as $key => $value) {
+                        $data[$num][$key] = utf8_encode($value);
+                    }
+                }
+            }
+			$result->free();
+		} else {
+            die('Query Error: '.mysqli_error($conexion));
+        }
+		$conexion->close();
+    } 
+    
+    // SE HACE LA CONVERSIÓN DE ARRAY A JSON
+    echo json_encode($data, JSON_PRETTY_PRINT);*/
+namespace backend;
+
+require_once __DIR__ . "/myapi/Products.php";
+use myapi\Products;
+
+$products = new Products("marketzone", "root", "12345678a", 3399);
+
+if (isset($_GET['search'])) {
+    $products->search($_GET['search']);
 }
-$conexion->set_charset("utf8");
 
-$q = isset($_GET['q']) ? $conexion->real_escape_string($_GET['q']) : '';
-$result = $conexion->query("SELECT * FROM productos WHERE nombre LIKE '%$q%' AND eliminado=0");
-
-$rows = [];
-while($row = $result->fetch_assoc()){
-    $rows[] = $row;
-}
-echo json_encode($rows, JSON_PRETTY_PRINT);
-
-$result->free();
-$conexion->close();
+echo $products->getData();
 ?>

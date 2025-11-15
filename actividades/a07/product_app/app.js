@@ -1,192 +1,366 @@
+/*$(document).ready(function () {
+  let edit = false;
+
+  // 🔹 Función principal para listar productos
+  function listarProductos() {
+    $.ajax({
+      url: "./backend/product-list.php",
+      type: "GET",
+      success: function (response) {
+        const productos = JSON.parse(response);
+        let template = "";
+
+        productos.forEach((producto) => {
+          let descripcion = `
+            <li>Precio: ${producto.precio}</li>
+            <li>Unidades: ${producto.unidades}</li>
+            <li>Modelo: ${producto.modelo}</li>
+            <li>Marca: ${producto.marca}</li>
+            <li>Detalles: ${producto.detalles}</li>
+          `;
+
+          template += `
+            <tr productId="${producto.id}">
+              <td>${producto.id}</td>
+              <td><a href="#" class="product-item">${producto.nombre}</a></td>
+              <td><ul>${descripcion}</ul></td>
+              <td>
+                <button class="product-delete btn btn-danger btn-sm">Eliminar</button>
+              </td>
+            </tr>
+          `;
+        });
+        $("#products").html(template);
+      },
+    });
+  }
+
+  listarProductos();
+
+  // 🔹 Buscar productos
+  $("#search").keyup(function () {
+    const search = $("#search").val();
+    if (search.trim() === "") {
+      listarProductos();
+      return;
+    }
+
+    $.ajax({
+      url: "./backend/product-search.php?search=" + search,
+      type: "GET",
+      success: function (response) {
+        const productos = JSON.parse(response);
+        let template = "";
+
+        productos.forEach((producto) => {
+          template += `
+            <tr productId="${producto.id}">
+              <td>${producto.id}</td>
+              <td><a href="#" class="product-item">${producto.nombre}</a></td>
+              <td>${producto.marca}</td>
+              <td>
+                <button class="product-delete btn btn-danger btn-sm">Eliminar</button>
+              </td>
+            </tr>
+          `;
+        });
+
+        $("#products").html(template);
+      },
+    });
+  });
+
+  // 🔹 Validar cada campo cuando pierde el foco (blur)
+  $("#product-form input, #product-form textarea").on("blur", function () {
+    let valor = $(this).val().trim();
+    let idCampo = $(this).attr("id");
+
+    if (valor === "") {
+      $(this).addClass("is-invalid").removeClass("is-valid");
+      mostrarEstado(`El campo ${idCampo} no puede estar vacío`, "error");
+    } else {
+      $(this).removeClass("is-invalid").addClass("is-valid");
+      mostrarEstado(`Campo ${idCampo} válido `, "ok");
+    }
+  });
+
+  // 🔹 Validar nombre del producto mientras se escribe (AJAX)
+  $("#nombre").on("keyup", function () {
+    const nombre = $(this).val().trim();
+    if (nombre.length === 0) {
+      $("#product-result").hide();
+      return;
+    }
+
+    $.ajax({
+      url: "./backend/product-checkname.php",
+      type: "GET",
+      data: { nombre },
+      success: function (response) {
+        $("#product-result").show();
+        if (response === "existe") {
+          $("#container").html("<li>El nombre ya existe en la base de datos.</li>");
+          $("#nombre").addClass("is-invalid");
+        } else {
+          $("#container").html("<li>Nombre disponible.</li>");
+          $("#nombre").removeClass("is-invalid").addClass("is-valid");
+        }
+      },
+    });
+  });
+
+  // 🔹 Al hacer clic en un producto → llenar formulario y cambiar botón
+  $(document).on("click", ".product-item", function (e) {
+    e.preventDefault();
+    const element = $(this)[0].parentElement.parentElement;
+    const id = $(element).attr("productId");
+
+    $.post("./backend/product-single.php", { id }, function (response) {
+      const product = JSON.parse(response);
+
+      $("#nombre").val(product.nombre);
+      $("#precio").val(product.precio);
+      $("#unidades").val(product.unidades);
+      $("#modelo").val(product.modelo);
+      $("#marca").val(product.marca);
+      $("#detalles").val(product.detalles);
+      $("#imagen").val(product.imagen);
+      $("#productId").val(product.id);
+
+      $("button.btn-primary").text("Modificar Producto");
+      edit = true;
+    });
+  });
+
+  // 🔹 Enviar formulario (Agregar o Modificar producto)
+  $("#product-form").submit(function (e) {
+    e.preventDefault();
+
+    // Validación antes de enviar
+    const campos = ["#nombre", "#precio", "#unidades", "#modelo", "#marca", "#detalles"];
+    for (let campo of campos) {
+      if ($(campo).val().trim() === "") {
+        alert("Por favor llena todos los campos requeridos");
+        return;
+      }
+    }
+
+    const postData = {
+      nombre: $("#nombre").val(),
+      precio: $("#precio").val(),
+      unidades: $("#unidades").val(),
+      modelo: $("#modelo").val(),
+      marca: $("#marca").val(),
+      detalles: $("#detalles").val(),
+      imagen: $("#imagen").val(),
+      id: $("#productId").val(),
+    };
+
+    const url = edit ? "./backend/product-edit.php" : "./backend/product-add.php";
+
+    $.post(url, postData, function (response) {
+      const respuesta = JSON.parse(response);
+      mostrarEstado(` ${respuesta.message}`, "ok");
+
+      $("#product-form").trigger("reset");
+      $("#product-form input, #product-form textarea").removeClass("is-valid is-invalid");
+      $("button.btn-primary").text("Agregar Producto");
+      edit = false;
+
+      listarProductos();
+    });
+  });
+
+  // 🔹 Eliminar producto
+  $(document).on("click", ".product-delete", function () {
+    if (!confirm("¿Seguro que quieres eliminar este producto?")) return;
+    const element = $(this)[0].parentElement.parentElement;
+    const id = $(element).attr("productId");
+
+    $.post("./backend/product-delete.php", { id }, function () {
+      mostrarEstado("Ejecución de eliminado correcto", "ok");
+      listarProductos();
+    });
+  });
+
+  // 🔹 Mostrar mensajes en la barra de estado
+  function mostrarEstado(mensaje, tipo) {
+    $("#product-result").show();
+    const color = tipo === "ok" ? "lightgreen" : "salmon";
+    $("#container").html(`<li style="color:${color}; list-style:none;">${mensaje}</li>`);
+  }
+});
+*/
 $(document).ready(function () {
-    let edit = false; // Indica si estamos editando
-    const API_URL = './backend/products_api.php';
+  let edit = false;
 
-    $('#product-result').hide();
+  // 🔹 Función principal para listar productos
+  function listarProductos() {
+    $.ajax({
+      url: "./backend/product-list.php",
+      type: "GET",
+      success: function (response) {
+        const productos = JSON.parse(response);
+        let template = "";
 
-    // --- Funciones de validación ---
-    function setError($input, msg) {
-        $input.addClass('is-invalid');
-        $input.siblings('.invalid-feedback').text(msg).show();
-    }
-    function clearError($input) {
-        $input.removeClass('is-invalid');
-        $input.siblings('.invalid-feedback').text('').hide();
-    }
+        productos.forEach((producto) => {
+          let descripcion = `
+            <li>Precio: ${producto.precio}</li>
+            <li>Unidades: ${producto.unidades}</li>
+            <li>Modelo: ${producto.modelo}</li>
+            <li>Marca: ${producto.marca}</li>
+            <li>Detalles: ${producto.detalles}</li>
+          `;
 
-    function validarFormulario() {
-        let errores = [];
-
-        const nombre = $('#name').val().trim();
-        if (!nombre || nombre.length > 100) errores.push('Nombre obligatorio y máximo 100 caracteres.');
-
-        const marca = $('#marca').val();
-        if (!marca) errores.push('Selecciona una marca.');
-
-        const modelo = $('#modelo').val().trim();
-        if (!modelo || !/^[a-zA-Z0-9\s-]+$/.test(modelo) || modelo.length > 25) errores.push('Modelo requerido, alfanumérico y máximo 25.');
-
-        const precio = parseFloat($('#precio').val());
-        if (isNaN(precio) || precio <= 99.99) errores.push('Precio debe ser mayor a $99.99.');
-
-        const unidades = parseInt($('#unidades').val());
-        if (isNaN(unidades) || unidades < 0) errores.push('Unidades deben ser 0 o más.');
-
-        const detalles = $('#detalles').val();
-        if ((detalles || '').length > 250) errores.push('Detalles máximo 250 caracteres.');
-
-        if (errores.length > 0) mostrarErrores(errores);
-
-        return errores.length === 0;
-    }
-
-    function mostrarErrores(errores) {
-        let template = '<li style="list-style:none;font-weight:bold;">Errores:</li>';
-        errores.forEach(e => template += `<li style="list-style:none;">${e}</li>`);
-        $('#container').html(template).show();
-    }
-
-    // --- Listar productos ---
-    function listarProductos() {
-        $.get(API_URL + '?action=list', function(response) {
-            let productos = [];
-            try { productos = JSON.parse(response); } catch(e){}
-
-            if (productos.length === 0) {
-                $('#products').html('<tr><td colspan="4" class="text-center">No hay productos.</td></tr>');
-                return;
-            }
-
-            let template = '';
-            productos.forEach(p => {
-                template += `
-                    <tr data-id="${p.id}">
-                        <td>${p.id}</td>
-                        <td><a href="#" class="product-item">${p.nombre}</a></td>
-                        <td>
-                            <ul>
-                                <li>Precio: ${p.precio}</li>
-                                <li>Unidades: ${p.unidades}</li>
-                                <li>Modelo: ${p.modelo}</li>
-                                <li>Marca: ${p.marca}</li>
-                                <li>Detalles: ${p.detalles}</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <button class="product-delete btn btn-danger">Eliminar</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            $('#products').html(template);
+          template += `
+            <tr productId="${producto.id}">
+              <td>${producto.id}</td>
+              <td>${producto.nombre}</td>
+              <td>${producto.marca}</td>
+              <td>${producto.modelo}</td>
+              <td>${producto.precio}</td>
+              <td>${producto.unidades}</td>
+              <td>
+                <button class="product-edit btn btn-success btn-sm">Editar</button>
+              </td>
+              <td>
+                <button class="product-delete btn btn-danger btn-sm">Eliminar</button>
+              </td>
+            </tr>
+          `;
         });
-    }
-
-    listarProductos();
-
-    // --- Agregar o editar producto ---
-    $('#product-form').submit(function(e){
-        e.preventDefault();
-        $('#product-result').hide();
-
-        if (!validarFormulario()) return;
-
-        const postData = {
-            nombre: $('#name').val().trim(),
-            marca: $('#marca').val(),
-            modelo: $('#modelo').val().trim(),
-            precio: $('#precio').val(),
-            unidades: $('#unidades').val(),
-            detalles: $('#detalles').val(),
-            imagen: $('#imagen').val(),
-            id: $('#productId').val()
-        };
-
-        const action = edit ? 'edit' : 'add';
-
-        $.post(API_URL + '?action=' + action, postData, function(response){
-            let r = {};
-            try { r = JSON.parse(response); } catch(e){ r = {status:'error', message:'Error en respuesta del servidor'}; }
-
-            $('#product-result').html(`<li style="list-style:none;font-weight:bold;">${r.message}</li>`).show();
-            $('#product-form').trigger('reset');
-            $('#productId').val('');
-            $('.form-control').removeClass('is-invalid');
-            edit = false;
-            $('button.btn-primary').text('Agregar Producto');
-            listarProductos();
-        });
+        $("#products").html(template);
+      },
     });
+  }
 
-    // --- Cargar producto para editar ---
-    $(document).on('click', '.product-item', function(e){
-        e.preventDefault();
-        const id = $(this).closest('tr').data('id');
+  listarProductos();
 
-        $.post(API_URL + '?action=single', {id}, function(response){
-            let p = {};
-            try { p = JSON.parse(response); } catch(e){}
+  // 🔹 Buscar productos
+  $("#search").keyup(function () {
+    const search = $("#search").val();
+    if (search.trim() === "") {
+      listarProductos();
+      return;
+    }
 
-            $('#name').val(p.nombre);
-            $('#marca').val(p.marca);
-            $('#modelo').val(p.modelo);
-            $('#precio').val(p.precio);
-            $('#unidades').val(p.unidades);
-            $('#detalles').val(p.detalles);
-            $('#imagen').val(p.imagen);
-            $('#productId').val(p.id);
+    $.ajax({
+      url: "./backend/product-search.php?search=" + search,
+      type: "GET",
+      success: function (response) {
+        const productos = JSON.parse(response);
+        let template = "";
 
-            edit = true;
-            $('button.btn-primary').text('Modificar Producto');
+        productos.forEach((producto) => {
+          template += `
+            <tr productId="${producto.id}">
+              <td>${producto.id}</td>
+              <td>${producto.nombre}</td>
+              <td>${producto.marca}</td>
+              <td>${producto.modelo}</td>
+              <td>${producto.precio}</td>
+              <td>${producto.unidades}</td>
+              <td>
+                <button class="product-edit btn btn-success btn-sm">Editar</button>
+              </td>
+              <td>
+                <button class="product-delete btn btn-danger btn-sm">Eliminar</button>
+              </td>
+            </tr>
+          `;
         });
+
+        $("#products").html(template);
+      },
     });
+  });
 
-    // --- Eliminar producto ---
-    $(document).on('click', '.product-delete', function(){
-        const id = $(this).closest('tr').data('id');
-        if (!confirm('¿Deseas eliminar este producto?')) return;
+  // 🔹 Al hacer clic en "Editar" en la tabla
+  $(document).on("click", ".product-edit", function () {
+    const element = $(this).closest("tr");
+    const id = $(element).attr("productId");
 
-        $.post(API_URL + '?action=delete', {id}, function(response){
-            listarProductos();
-        });
+    $.post("./backend/product-single.php", { id }, function (response) {
+      const product = JSON.parse(response);
+
+      $("#nombre").val(product.nombre);
+      $("#precio").val(product.precio);
+      $("#unidades").val(product.unidades);
+      $("#modelo").val(product.modelo);
+      $("#marca").val(product.marca);
+      $("#detalles").val(product.detalles);
+      $("#imagen").val(product.imagen);
+      $("#productId").val(product.id);
+
+      $("button.btn-primary").text("Modificar Producto");
+      edit = true;
     });
+  });
 
-    // --- Buscar productos ---
-    $('#search').on('keyup', function(e){
-        e.preventDefault();
-        const search = $(this).val().trim();
-        if (!search) return listarProductos();
+  // 🔹 Validación básica al perder foco
+  $("#product-form input, #product-form textarea").on("blur", function () {
+    let valor = $(this).val().trim();
+    if (valor === "") {
+      $(this).addClass("is-invalid").removeClass("is-valid");
+    } else {
+      $(this).removeClass("is-invalid").addClass("is-valid");
+    }
+  });
 
-        $.get(API_URL + '?action=search&search=' + encodeURIComponent(search), function(response){
-            let productos = [];
-            try { productos = JSON.parse(response); } catch(e){}
-            if (productos.length === 0) {
-                $('#products').html('<tr><td colspan="4" class="text-center">No se encontraron coincidencias.</td></tr>');
-                return;
-            }
+  // 🔹 Enviar formulario (Agregar o Modificar producto)
+  $("#product-form").submit(function (e) {
+    e.preventDefault();
 
-            let template = '';
-            productos.forEach(p => {
-                template += `
-                    <tr data-id="${p.id}">
-                        <td>${p.id}</td>
-                        <td><a href="#" class="product-item">${p.nombre}</a></td>
-                        <td>
-                            <ul>
-                                <li>Precio: ${p.precio}</li>
-                                <li>Unidades: ${p.unidades}</li>
-                                <li>Modelo: ${p.modelo}</li>
-                                <li>Marca: ${p.marca}</li>
-                                <li>Detalles: ${p.detalles}</li>
-                            </ul>
-                        </td>
-                        <td>
-                            <button class="product-delete btn btn-danger">Eliminar</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            $('#products').html(template);
-        });
+    const campos = ["#nombre", "#precio", "#unidades", "#modelo", "#marca", "#detalles", "#imagen"];
+    for (let campo of campos) {
+      if ($(campo).val().trim() === "") {
+        alert("Por favor llena todos los campos requeridos");
+        return;
+      }
+    }
+
+    const postData = {
+      nombre: $("#nombre").val(),
+      precio: $("#precio").val(),
+      unidades: $("#unidades").val(),
+      modelo: $("#modelo").val(),
+      marca: $("#marca").val(),
+      detalles: $("#detalles").val(),
+      imagen: $("#imagen").val(),
+      id: $("#productId").val(),
+    };
+
+    const url = edit ? "./backend/product-edit.php" : "./backend/product-add.php";
+
+    $.post(url, postData, function (response) {
+      const respuesta = JSON.parse(response);
+      mostrarEstado(respuesta.message, "ok");
+
+      $("#product-form").trigger("reset");
+      $("#product-form input, #product-form textarea").removeClass("is-valid is-invalid");
+      $("button.btn-primary").text("Agregar Producto");
+      edit = false;
+
+      listarProductos();
     });
+  });
+
+  // 🔹 Eliminar producto
+  $(document).on("click", ".product-delete", function () {
+    if (!confirm("¿Seguro que quieres eliminar este producto?")) return;
+    const element = $(this).closest("tr");
+    const id = $(element).attr("productId");
+
+    $.post("./backend/product-delete.php", { id }, function () {
+      mostrarEstado("Producto eliminado correctamente", "ok");
+      listarProductos();
+    });
+  });
+
+  // 🔹 Mostrar mensajes en la barra de estado
+  function mostrarEstado(mensaje, tipo) {
+    $("#product-result").show();
+    const color = tipo === "ok" ? "lightgreen" : "salmon";
+    $("#container").html(`<li style="color:${color}; list-style:none;">${mensaje}</li>`);
+  }
 });

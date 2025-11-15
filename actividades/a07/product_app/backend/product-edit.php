@@ -1,6 +1,5 @@
 <?php
-/*
-    include_once __DIR__.'/database.php';
+    /*include_once __DIR__.'/database.php';
 
     // SE CREA EL ARREGLO QUE SE VA A DEVOLVER EN FORMA DE JSON
     $data = array(
@@ -25,11 +24,26 @@
     } 
     
     // SE HACE LA CONVERSIÓN DE ARRAY A JSON
-    echo json_encode($data, JSON_PRETTY_PRINT);
-    */
-    use TECWEB\MYAPI\Products as Products; 
-    require_once __DIR__.'/myapi/Products.php'; 
-    
-    $prodObj = new Products('marketzone'); 
-    $prodObj->edit($prodObj);
+    echo json_encode($data, JSON_PRETTY_PRINT);*/
+
+namespace backend;
+
+require_once __DIR__ . "/myapi/Products.php";
+use myapi\Products;
+
+// Crear instancia de la clase Products
+$products = new Products("marketzone", "root", "12345678a", 3399);
+
+// Validar datos recibidos
+if (isset($_POST['id'])) {
+
+    // Convertir POST a objeto
+    $obj = json_decode(json_encode($_POST));
+
+    // Llamar al método edit()
+    $products->edit($obj);
+}
+
+// Respuesta en JSON
+echo $products->getData();
 ?>

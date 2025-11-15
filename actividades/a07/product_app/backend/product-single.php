@@ -1,6 +1,5 @@
 <?php
-/*
-    include_once __DIR__.'/database.php';
+    /*include_once __DIR__.'/database.php';
 
     // SE CREA EL ARREGLO QUE SE VA A DEVOLVER EN FORMA DE JSON
     $data = array();
@@ -26,14 +25,20 @@
     }
 
     // SE HACE LA CONVERSIÓN DE ARRAY A JSON
-    echo json_encode($data, JSON_PRETTY_PRINT);
-    */
-    use TECWEB\MYAPI\Products as Products; 
-    require_once __DIR__.'/myapi/Products.php'; 
-    
-    $prodObj = new Products('marketzone'); 
-    $id = isset($_GET['id']) ? $_GET['id'] : '';
-    $prodObj->single($id);
-    
-    echo json_encode ($prodObj->getData());
+    echo json_encode($data, JSON_PRETTY_PRINT);*/
+namespace backend;
+
+require_once __DIR__ . "/myapi/Products.php";
+use myapi\Products;
+
+$products = new Products("marketzone", "root", "12345678a", 3399);
+
+    // Validar que exista el ID recibido desde POST
+if (isset($_POST['id'])) {
+    $products->single($_POST['id']);
+}
+
+    // Imprimir la respuesta como JSON
+echo $products->getData();
+
 ?>
