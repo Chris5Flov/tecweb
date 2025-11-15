@@ -1,15 +1,15 @@
 <?php
-namespace TECWEB\MYAPI;
+namespace Vendor\Composer;
+use Vendor\Composer\DataBase as DataBase;
 
-use TECWEB\MYAPI\DataBase;
 require_once __DIR__ . '/DataBase.php';
 
 class Products extends DataBase {
     private $data;
 
-    public function __construct($db, $user='root', $pass='12345678a') {
+    public function __construct($db, $user='root', $pass='12345678a', $port=3399) {
         $this->data = array();
-        parent::__construct($db, $user, $pass);
+        parent::__construct($db, $user, $pass, $port);
     }
 
     public function add($jsonOBJ) {
@@ -35,8 +35,6 @@ class Products extends DataBase {
             }
 
             $result->free();
-            // Cierra la conexion
-            $this->conexion->close();
         }
     }
 
@@ -56,7 +54,6 @@ class Products extends DataBase {
             } else {
                 $this->data['message'] = "ERROR: No se ejecuto $sql. " . mysqli_error($this->conexion);
             }
-            $this->conexion->close();
         } 
     }
 
@@ -79,7 +76,6 @@ class Products extends DataBase {
             } else {
                 $this->data['message'] = "ERROR: No se ejecuto $sql. " . mysqli_error($this->conexion);
             }
-            $this->conexion->close();
         }
     }
 
@@ -101,7 +97,6 @@ class Products extends DataBase {
         } else {
             die('Query Error: '.mysqli_error($this->conexion));
         }
-        $this->conexion->close();
     }
 
     public function search($search) {
@@ -125,7 +120,6 @@ class Products extends DataBase {
             } else {
                 die('Query Error: '.mysqli_error($this->conexion));
             }
-            $this->conexion->close();
         }
     }
 
@@ -146,7 +140,6 @@ class Products extends DataBase {
             } else {
                 die('Query Error: '.mysqli_error($this->conexion));
             }
-            $this->conexion->close();
         }
     }
 
