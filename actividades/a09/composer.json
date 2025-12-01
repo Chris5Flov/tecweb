@@ -1,0 +1,15 @@
+{
+    "name": "vendor/composer",
+    "description": "P12 TW",
+    "autoload": {
+        "psr-4": {
+            "Vendor\\Composer\\": "Nat/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Christian"
+        }
+    ],
+    "require": {}
+}
