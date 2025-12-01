@@ -1,199 +1,196 @@
 // JSON BASE A MOSTRAR EN FORMULARIO
-const baseJSON = {
+var baseJSON = {
     "precio": 0.0,
     "unidades": 1,
     "modelo": "XX-000",
     "marca": "NA",
     "detalles": "NA",
     "imagen": "img/default.png"
-};
+  };
 
-$(document).ready(function() {
+$(document).ready(function(){
     let edit = false;
 
-    // Inicializa textarea con JSON base
-    $('#description').val(JSON.stringify(baseJSON, null, 2));
+    let JsonString = JSON.stringify(baseJSON,null,2);
+    $('#description').val(JsonString);
     $('#product-result').hide();
-
     listarProductos();
-
-    // Listar productos
+//LISTAR PRODUCTOS
     function listarProductos() {
         $.ajax({
-            url: 'http://localhost/tecweb/actividades/a09/Nat/Read/product-list.php',
+            url: `http://localhost/tecweb/actividades/a09/Nat/Read/product-list.php`,
             type: 'GET',
             success: function(response) {
-                console.log('Response product-list:', response);
-
-                let productos;
-                try {
-                    productos = JSON.parse(response);
-                } catch (e) {
-                    console.error('Error parseando JSON:', e);
-                    return;
-                }
-
-                if (productos && productos.length > 0) {
+                console.log(response);
+                // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
+                const productos = JSON.parse(response);
+            
+                // SE VERIFICA SI EL OBJETO JSON TIENE DATOS
+                if(Object.keys(productos).length > 0) {
+                    // SE CREA UNA PLANTILLA PARA CREAR LAS FILAS A INSERTAR EN EL DOCUMENTO HTML
                     let template = '';
 
                     productos.forEach(producto => {
-                        let descripcion = `
-                            <li>precio: ${producto.precio}</li>
-                            <li>unidades: ${producto.unidades}</li>
-                            <li>modelo: ${producto.modelo}</li>
-                            <li>marca: ${producto.marca}</li>
-                            <li>detalles: ${producto.detalles}</li>
-                        `;
-
+                        // SE CREA UNA LISTA HTML CON LA DESCRIPCIÓN DEL PRODUCTO
+                        let descripcion = '';
+                        descripcion += '<li>precio: '+producto.precio+'</li>';
+                        descripcion += '<li>unidades: '+producto.unidades+'</li>';
+                        descripcion += '<li>modelo: '+producto.modelo+'</li>';
+                        descripcion += '<li>marca: '+producto.marca+'</li>';
+                        descripcion += '<li>detalles: '+producto.detalles+'</li>';
+                    
                         template += `
                             <tr productId="${producto.id}">
                                 <td>${producto.id}</td>
                                 <td><a href="#" class="product-item">${producto.nombre}</a></td>
                                 <td><ul>${descripcion}</ul></td>
                                 <td>
-                                    <button class="product-delete btn btn-danger">Eliminar</button>
+                                    <button class="product-delete btn btn-danger">
+                                        Eliminar
+                                    </button>
                                 </td>
                             </tr>
                         `;
                     });
-
+                    // SE INSERTA LA PLANTILLA EN EL ELEMENTO CON ID "productos"
                     $('#products').html(template);
-                } else {
-                    $('#products').html('<tr><td colspan="4">No hay productos</td></tr>');
                 }
             }
         });
     }
 
-    // búsqueda
+//BUSQUEDA
     $('#search').keyup(function() {
-        const search = $(this).val();
-        if (search) {
+        if($('#search').val()) {
+            let search = $('#search').val();
             $.ajax({
-                url: `./Nat/Read/product-search.php?search=${search}`, 
+                url: `./Nat/Read/product-search.php` + encodeURIComponent(search),
                 type: 'GET',
-                success: function(response) {
-                    let productos;
-                    try {
-                        productos = JSON.parse(response);
-                    } catch (e) {
-                        console.error('Error parseando JSON:', e);
-                        return;
-                    }
+                success: function (response) {
+                    if(!response.error) {
+                        // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
+                        const productos = JSON.parse(response);
+                        
+                        // SE VERIFICA SI EL OBJETO JSON TIENE DATOS
+                        if(Object.keys(productos).length > 0) {
+                            // SE CREA UNA PLANTILLA PARA CREAR LAS FILAS A INSERTAR EN EL DOCUMENTO HTML
+                            let template = '';
+                            let template_bar = '';
 
-                    if (productos && productos.length > 0) {
-                        let template = '';
-                        let template_bar = '';
+                            productos.forEach(producto => {
+                                // SE CREA UNA LISTA HTML CON LA DESCRIPCIÓN DEL PRODUCTO
+                                let descripcion = '';
+                                descripcion += '<li>precio: '+producto.precio+'</li>';
+                                descripcion += '<li>unidades: '+producto.unidades+'</li>';
+                                descripcion += '<li>modelo: '+producto.modelo+'</li>';
+                                descripcion += '<li>marca: '+producto.marca+'</li>';
+                                descripcion += '<li>detalles: '+producto.detalles+'</li>';
+                            
+                                template += `
+                                    <tr productId="${producto.id}">
+                                        <td>${producto.id}</td>
+                                        <td><a href="#" class="product-item">${producto.nombre}</a></td>
+                                        <td><ul>${descripcion}</ul></td>
+                                        <td>
+                                            <button class="product-delete btn btn-danger">
+                                                Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `;
 
-                        productos.forEach(producto => {
-                            let descripcion = `
-                                <li>precio: ${producto.precio}</li>
-                                <li>unidades: ${producto.unidades}</li>
-                                <li>modelo: ${producto.modelo}</li>
-                                <li>marca: ${producto.marca}</li>
-                                <li>detalles: ${producto.detalles}</li>
-                            `;
-
-                            template += `
-                                <tr productId="${producto.id}">
-                                    <td>${producto.id}</td>
-                                    <td><a href="#" class="product-item">${producto.nombre}</a></td>
-                                    <td><ul>${descripcion}</ul></td>
-                                    <td>
-                                        <button class="product-delete btn btn-danger">Eliminar</button>
-                                    </td>
-                                </tr>
-                            `;
-
-                            template_bar += `<li>${producto.nombre}</li>`;
-                        });
-
-                        $('#product-result').show();
-                        $('#container').html(template_bar);
-                        $('#products').html(template);
-                    } else {
-                        $('#product-result').hide();
-                        $('#products').html('<tr><td colspan="4">No hay productos</td></tr>');
-                        $('#container').html('');
+                                template_bar += `
+                                    <li>${producto.nombre}</li>
+                                `;
+                            });
+                            // SE HACE VISIBLE LA BARRA DE ESTADO
+                            $('#product-result').show();
+                            // SE INSERTA LA PLANTILLA PARA LA BARRA DE ESTADO
+                            $('#container').html(template_bar);
+                            // SE INSERTA LA PLANTILLA EN EL ELEMENTO CON ID "productos"
+                            $('#products').html(template);    
+                        }
                     }
                 }
             });
-        } else {
+        }
+        else {
             $('#product-result').hide();
-            listarProductos();
         }
     });
-
-    // agregar
+//AGREGAR/EDITAR
     $('#product-form').submit(e => {
         e.preventDefault();
-
+    
         let postData = JSON.parse($('#description').val());
         postData['nombre'] = $('#name').val();
         postData['id'] = $('#productId').val();
 
         const url = edit ? './Nat/Update/product-edit.php' : './Nat/Create/product-add.php';
+        console.log('edit es:', edit);
 
-        $.post(url, postData, (response) => {
-            let respuesta;
-            try {
-                respuesta = JSON.parse(response);
-            } catch (e) {
-                console.error('Error parseando respuesta JSON:', e);
-                return;
+        $.ajax({
+            url: url,
+            type: edit ? 'PUT' : 'POST',
+            data: JSON.stringify(postData),
+            contentType: 'application/json',
+            success: function(response){
+                console.log(response);
+                let respuesta = JSON.parse(response);
+                let template_bar = `
+                    <li style="list-style: none;">status: ${respuesta.status}</li>
+                    <li style="list-style: none;">message: ${respuesta.message}</li>
+                `;
+                $('#name').val('');
+                $('#description').val('');
+                $('#product-result').show();
+                $('#container').html(template_bar);
+                listarProductos();
+                edit = false;
             }
-
-            $('#container').html(`
-                <li style="list-style:none;">status: ${respuesta.status}</li>
-                <li style="list-style:none;">message: ${respuesta.message}</li>
-            `);
-
-            $('#name').val('');
-            $('#description').val(JSON.stringify(baseJSON, null, 2));
-            $('#product-result').show();
-            listarProductos();
-            edit = false;
         });
     });
-
-    // eliminar
-    $(document).on('click', '.product-delete', (e) => {
+    
+    
+    
+//ELIMINAR
+    $(document).on('click', '.product-delete', function () {
         if (confirm('¿Realmente deseas eliminar el producto?')) {
-            const element = $(e.target).closest('tr');
-            const id = $(element).attr('productId');
-
-            $.post('./Nat/Delete/product-delete.php', { id }, (response) => {
-                $('#product-result').hide();
-                listarProductos();
+            const row = $(this).closest('tr');
+            const id = row.attr('productId');
+    
+            $.ajax({
+                url: `http://localhost/tecweb/actividades/a09/Nat/Delete/product-delete.php/${id}`,
+                type: 'DELETE',
+                success: function(response){
+                    $('#product-result').hide();
+                    listarProductos();
+                }
             });
         }
     });
-
-    // ver
-    $(document).on('click', '.product-item', (e) => {
-        const element = $(e.target).closest('tr');
-        const id = $(element).attr('productId');
-
-        $.post('./Nat/Read/product-single.php', { id }, (response) => {
-            let product;
-            try {
-                product = JSON.parse(response);
-            } catch (e) {
-                console.error('Error parseando JSON:', e);
-                return;
-            }
-
+    
+//DETALLES DEL PRODUCTO
+    $(document).on('click', '.product-item', function(e) {
+        e.preventDefault();
+    
+        const row = $(this).closest('tr');
+        const id = row.attr('productId');
+    
+        $.get(`http://localhost/tecweb/actividades/a09/Nat/Read/product-single.php${id}`, { name: id }, (response) => {
+            let product = JSON.parse(response);
+    
             $('#name').val(product.nombre);
             $('#productId').val(product.id);
-
+    
             delete product.nombre;
             delete product.eliminado;
             delete product.id;
-
-            $('#description').val(JSON.stringify(product, null, 2));
+    
+            let JsonString = JSON.stringify(product, null, 2);
+            $('#description').val(JsonString);
+    
             edit = true;
         });
-
-        e.preventDefault();
-    });
+    });    
 });
