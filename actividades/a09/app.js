@@ -15,10 +15,10 @@ $(document).ready(function(){
     $('#description').val(JsonString);
     $('#product-result').hide();
     listarProductos();
-//LISTAR PRODUCTOS
+
     function listarProductos() {
         $.ajax({
-            url: `http://localhost/tecweb/actividades/a09/Nat/Read/product-list.php`,
+            url: `http://localhost/tecweb/actividades/a09/backend/products`,
             type: 'GET',
             success: function(response) {
                 console.log(response);
@@ -59,12 +59,11 @@ $(document).ready(function(){
         });
     }
 
-//BUSQUEDA
     $('#search').keyup(function() {
         if($('#search').val()) {
             let search = $('#search').val();
             $.ajax({
-                url: `./Nat/Read/product-search.php` + encodeURIComponent(search),
+                url: `http://localhost/tecweb/actividades/a09/backend/products/` + encodeURIComponent(search),
                 type: 'GET',
                 success: function (response) {
                     if(!response.error) {
@@ -118,15 +117,15 @@ $(document).ready(function(){
             $('#product-result').hide();
         }
     });
-//AGREGAR/EDITAR
+
     $('#product-form').submit(e => {
         e.preventDefault();
     
         let postData = JSON.parse($('#description').val());
         postData['nombre'] = $('#name').val();
         postData['id'] = $('#productId').val();
-
-        const url = edit ? './Nat/Update/product-edit.php' : './Nat/Create/product-add.php';
+    
+        const url = 'http://localhost/tecweb/actividades/a09/backend/product';
         console.log('edit es:', edit);
 
         $.ajax({
@@ -153,14 +152,14 @@ $(document).ready(function(){
     
     
     
-//ELIMINAR
+
     $(document).on('click', '.product-delete', function () {
         if (confirm('¿Realmente deseas eliminar el producto?')) {
             const row = $(this).closest('tr');
             const id = row.attr('productId');
     
             $.ajax({
-                url: `http://localhost/tecweb/actividades/a09/Nat/Delete/product-delete.php/${id}`,
+                url: `http://localhost/tecweb/actividades/a09/backend/productos/${id}`,
                 type: 'DELETE',
                 success: function(response){
                     $('#product-result').hide();
@@ -170,14 +169,14 @@ $(document).ready(function(){
         }
     });
     
-//DETALLES DEL PRODUCTO
+
     $(document).on('click', '.product-item', function(e) {
         e.preventDefault();
     
         const row = $(this).closest('tr');
         const id = row.attr('productId');
     
-        $.get(`http://localhost/tecweb/actividades/a09/Nat/Read/product-single.php${id}`, { name: id }, (response) => {
+        $.get(`http://localhost/tecweb/actividades/a09/backend/productos/${id}`, { name: id }, (response) => {
             let product = JSON.parse(response);
     
             $('#name').val(product.nombre);
